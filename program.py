@@ -77,8 +77,6 @@ def viewCheckout (ipad_file, robot_file):
 
 def checkin():
     
-
-    
     checkin_amount = int(input("How many sets do you want to check in: "))
     checkedin = 0
 
