@@ -215,11 +215,7 @@ while (choice != QUIT):
     
 
     elif (choice == CHECKIN):
-        print("TODO")
-
-        #ipad_file = open("ipad.csv", 'r')
-        #robot_file = open("robots.csv", 'r')
-
+        
         checkin()
 
 
