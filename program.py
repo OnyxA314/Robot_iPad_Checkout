@@ -16,6 +16,7 @@ def menu():
     return choice
 
 
+
 #deletes any previes iPad data and resets it to a default state
 def default_ipad():
     ipad_file = open("ipad.csv", 'w')
@@ -23,12 +24,14 @@ def default_ipad():
     ipad_file.close()
     return
 
+
 #deletes any previous robot data and resets it to a default state
 def default_robot():
     robot_file = open("robots.csv", 'w')
     robot_file.write("Robot Name, Checked Out, Time Out, Time In, Student Name\n")
     robot_file.close()
     return
+
 
 
 def checkout(ipad_file, robot_file):
@@ -72,85 +75,102 @@ def viewCheckout (ipad_file, robot_file):
     
 
 
-def checkin(ipad_file, robot_file):
+def checkin():
     
-    rows = [] #empty list, going to contain every row to write back to the file
-    ipad_found = False #assume the ipad isn't valid first
 
-    ipad_checkin = input("What iPad are you checking in: ")
-    robot_checkin = input("What robot are you checking in: ")
+    
+    checkin_amount = int(input("How many sets do you want to check in: "))
+    checkedin = 0
 
-    reader = csv.DictReader(ipad_file)
-    for row in reader:
-        if row["iPad ID"] == ipad_checkin:
-            if row[" Checked Out"] == 'T':
-                row[" Checked Out"] = 'F'
+    while (checkedin < checkin_amount):
+        ipad_file = open("ipad.csv", 'r')
+        robot_file = open("robots.csv", 'r')
 
-                timein = datetime.datetime.now().time() #time of checkin
-                timein = timein.strftime("%I:%M %p") #converts checkin to 12 hour clock
-                row[" Time In"] = timein
+        rows = [] #empty list, going to contain every row to write back to the file
+        ipad_found = False #assume the ipad isn't valid first
 
-                print(f"{ipad_checkin} has been checked in")
-            else:
-                print(f"{ipad_checkin} has already been marked as checked in...")
+        ipad_checkin = input("What iPad are you checking in: ")
+        robot_checkin = input("What robot are you checking in: ")
+
+        reader = csv.DictReader(ipad_file)
+        for row in reader:
+            if row["iPad ID"] == ipad_checkin:
+                if row[" Checked Out"] == 'T':
+                    row[" Checked Out"] = 'F'
+
+                    timein = datetime.datetime.now().time() #time of checkin
+                    timein = timein.strftime("%I:%M %p") #converts checkin to 12 hour clock
+                    row[" Time In"] = timein
+
+                    print(f"{ipad_checkin} has been checked in")
+                else:
+                    print(f"{ipad_checkin} has already been marked as checked in...")
             
-            ipad_found = True
+                ipad_found = True
 
-        rows.append(row)
+            rows.append(row)
 
     
-    #done reading all the rows, reopen the file as write and write all the data if we find an ipad, otherwise say no ipad matched
-    if (ipad_found):
-        ipad_file.close()
-        ipad_file = open("ipad.csv", 'w')
+        #done reading all the rows, reopen the file as write and write all the data if we find an ipad, otherwise say no ipad matched
+        if (ipad_found):
+            ipad_file.close()
+            ipad_file = open("ipad.csv", 'w')
        
-        fieldnames = rows[0].keys()
-        writer = csv.DictWriter(ipad_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-    else:
-        print("No iPad with that ID was checked out...")
+            fieldnames = rows[0].keys()
+            writer = csv.DictWriter(ipad_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+        else:
+            print("No iPad with that ID was checked out...")
 
 
 
 
 
-    #Now to do all that above but with the robots 
-    rows = [] #empty list, going to contain every row to write back to the file
-    robot_found = False #assume the robot isn't valid first
+        #Now to do all that above but with the robots 
+        rows = [] #empty list, going to contain every row to write back to the file
+        robot_found = False #assume the robot isn't valid first
 
-    reader = csv.DictReader(robot_file)
-    for row in reader:
-        if row["Robot Name"] == robot_checkin:
-            if row[" Checked Out"] == 'T':
-                row[" Checked Out"] = 'F'
+        reader = csv.DictReader(robot_file)
+        for row in reader:
+            if row["Robot Name"] == robot_checkin:
+                if row[" Checked Out"] == 'T':
+                    row[" Checked Out"] = 'F'
 
-                timein = datetime.datetime.now().time() #time of checkin
-                timein = timein.strftime("%I:%M %p") #converts checkin to 12 hour clock
-                row[" Time In"] = timein
+                    timein = datetime.datetime.now().time() #time of checkin
+                    timein = timein.strftime("%I:%M %p") #converts checkin to 12 hour clock
+                    row[" Time In"] = timein
 
-                print(f"{robot_checkin} has been checked in")
-            else:
-                print(f"{robot_checkin} has already been marked as checked in...")
+                    print(f"{robot_checkin} has been checked in")
+                else:
+                    print(f"{robot_checkin} has already been marked as checked in...")
             
-            robot_found = True
+                robot_found = True
 
-        rows.append(row)
+            rows.append(row)
 
     
-    #done reading all the rows, reopen the file as write and write all the data if we found a robot, otherwise say we didn't find a matching one 
-    if (robot_found):
-        robot_file.close()
-        robot_file = open("robots.csv", 'w')
+        #done reading all the rows, reopen the file as write and write all the data if we found a robot, otherwise say we didn't find a matching one 
+        if (robot_found):
+            robot_file.close()
+            robot_file = open("robots.csv", 'w')
        
-        fieldnames = rows[0].keys()
-        writer = csv.DictWriter(robot_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-    else:
-        print("No robot with that name was checked out...")
+            fieldnames = rows[0].keys()
+            writer = csv.DictWriter(robot_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+        else:
+            print("No robot with that name was checked out...")
+
+
+        print("\n\n")
+        checkedin += 1
 
     
+
+
+
+
 
 
 #tries top open up the required files, if not create them
@@ -189,22 +209,29 @@ while (choice != QUIT):
 
         checkout(ipad_file, robot_file)
 
+        ipad_file.close()
+        robot_file.close()
+
     
 
     elif (choice == CHECKIN):
         print("TODO")
 
-        ipad_file = open("ipad.csv", 'r')
-        robot_file = open("robots.csv", 'r')
+        #ipad_file = open("ipad.csv", 'r')
+        #robot_file = open("robots.csv", 'r')
 
-        checkin(ipad_file, robot_file)
+        checkin()
 
 
     elif (choice == VIEW_CHECKEDOUT):
         ipad_file = open("ipad.csv", 'r')
         robot_file = open("robots.csv", 'r')
 
-        viewCheckout(ipad_file, robot_file)
+        viewCheckout(ipad_file, robot_file)  
+
+        ipad_file.close()
+        robot_file.close()
+
 
 
 
@@ -216,9 +243,5 @@ while (choice != QUIT):
 
 
 
-    
-    #every option requires files to be open, so just closing it all here :)
-    ipad_file.close()
-    robot_file.close()
-
+  
     print("\n")
