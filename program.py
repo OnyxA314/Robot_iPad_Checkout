@@ -1,4 +1,5 @@
 import datetime
+import csv #for checking what robots and iPads are checked out currently
 
 CHECKOUT = 1
 CHECKIN = 2
@@ -29,13 +30,42 @@ def default_robot():
 
 
 def checkout(ipad_file, robot_file):
-    ipad_id = input("Enter the ipad ID: ")
-    robot_id = input("Enter the name of the robot: ")
-    checkout_name = input("Enter the name of the student (optional): ")
-    timeout = datetime.datetime.now().time()
 
-    ipad_file.write (f"{ipad_id},T,{timeout},,{checkout_name}\n")
-    robot_file.write(f"{robot_id},T, {timeout},,{checkout_name}\n")
+    checkout_amount = int(input("How many students are checking out a robot and iPad: "))
+    checked_out = 0
+
+    while (checked_out < checkout_amount):
+        
+        print("\n")
+
+        ipad_id = input("Enter the ipad ID: ")
+        robot_id = input("Enter the name of the robot: ")
+        checkout_name = input("Enter the name of the student (optional): ")
+        timeout = datetime.datetime.now().time() #time of checkout
+        timeout = timeout.strftime("%I:%M %p")
+
+        ipad_file.write (f"{ipad_id},T,{timeout},,{checkout_name}\n")
+        robot_file.write(f"{robot_id},T, {timeout},,{checkout_name}\n")
+
+        checked_out += 1
+
+
+def viewCheckout (ipad_file, robot_file):
+    
+    print("\n\nCurrent iPads checked out:")
+    print("\niPad ID,    Time Checked Out,     Student Name")
+    reader = csv.DictReader(ipad_file)
+    for row in reader:
+        if row[" Checked Out"] == 'T':
+            print(row["iPad ID"] + ",        " + row[" Time Out"] + ",                " + row[" Student Name"])
+
+    print("\n\nCurrent Robots checked out:")
+    print("\nRobot name,    Time Checked Out,   Student Name")
+    reader = csv.DictReader(robot_file)
+    for row in reader:
+        if row[" Checked Out"] == 'T':
+            print(row["Robot Name"] + ",        " + row[" Time Out"] + ",              " + row[" Student Name"])
+    
 
     
 
@@ -81,8 +111,14 @@ while (choice != QUIT):
     elif (choice == CHECKIN):
         print("TODO")
 
+
     elif (choice == VIEW_CHECKEDOUT):
-        print("TODO")
+        ipad_file = open("ipad.csv", 'r')
+        robot_file = open("robots.csv", 'r')
+
+        viewCheckout(ipad_file, robot_file)
+
+
 
     elif (choice == QUIT):
         print("Exiting the program...")
