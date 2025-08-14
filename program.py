@@ -15,7 +15,7 @@ def menu():
     print("Press", VIEW_CHECKEDOUT, "to view all currently checked out items")
     print("Press", VIEW_ALL, "to view all iPads and Robots used at this event")
     print("Press", QUIT, "to exit the program")
-    choice = input()
+    choice = input("Your Choice: ")
     return choice
 
 
@@ -255,7 +255,10 @@ while (choice != QUIT):
         print("Exiting the program...")
 
     else:
+        print("\n\n\n")
+        print("WARNING: INVALID OPTION, RETURNING TO MENU")
         print("Please choose a valid option")
+        print("\n\n\n")
 
   
     print("\n")
