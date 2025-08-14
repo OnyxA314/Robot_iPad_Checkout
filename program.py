@@ -4,13 +4,15 @@ import csv #for checking what robots and iPads are checked out currently
 CHECKOUT = 1
 CHECKIN = 2
 VIEW_CHECKEDOUT = 3
-QUIT = 4
+VIEW_ALL = 4
+QUIT = 5
 
 
 def menu():
     print("Press" ,CHECKOUT, "to check out an iPad and Robot")
     print("Press", CHECKIN, "to check in an iPad and Robot")
     print("Press", VIEW_CHECKEDOUT, "to view all currently checked out items")
+    print("Press", VIEW_ALL, "to view all iPads and Robots used at this event")
     print("Press", QUIT, "to exit the program")
     choice = int(input())
     return choice
@@ -166,7 +168,17 @@ def checkin():
 
     
 
+def viewAll (ipad_file, robot_file):
+    
+    print("\nAll iPads used: ")
 
+    for ipad_lines in ipad_file:
+        print(ipad_lines)
+
+    print("\nAll Robots used: ")
+    
+    for robot_lines in robot_file:
+        print(robot_lines)
 
 
 
@@ -197,7 +209,7 @@ if (reset == 'y'): #defaults to false, have to explicitly type in Y or y to avoi
 print("\n\n")
 
 #loop to decide
-choice = 5 #arbitrary value not 4 to initially enter loop, after we enter don't care about this value anymore
+choice = 100 #arbitrary value not 4 to initially enter loop, after we enter don't care about this value anymore
 while (choice != QUIT):
     choice = menu()
     
@@ -222,6 +234,16 @@ while (choice != QUIT):
         robot_file = open("robots.csv", 'r')
 
         viewCheckout(ipad_file, robot_file)  
+
+        ipad_file.close()
+        robot_file.close()
+
+
+    elif (choice == VIEW_ALL):
+        ipad_file = open("ipad.csv", 'r')
+        robot_file = open("robots.csv", 'r')
+
+        viewAll (ipad_file, robot_file)
 
         ipad_file.close()
         robot_file.close()
