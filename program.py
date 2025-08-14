@@ -24,7 +24,7 @@ def menu():
 def default_ipad():
 
     ipad_file = open("ipad.csv", 'w')
-    ipad_file.write("iPad ID, Checked Out, Time Out, Time In, Student Name\n")
+    ipad_file.write("iPad ID, Checked Out, Time Out, Time In\n")
     ipad_file.close()
     return
 
@@ -33,7 +33,7 @@ def default_ipad():
 def default_robot():
 
     robot_file = open("robots.csv", 'w')
-    robot_file.write("Robot Name, Checked Out, Time Out, Time In, Student Name\n")
+    robot_file.write("Robot Name, Checked Out, Time Out, Time In\n")
     robot_file.close()
     return
 
@@ -50,12 +50,12 @@ def checkout(ipad_file, robot_file):
 
         ipad_id = input("Enter the ipad ID: ")
         robot_id = input("Enter the name of the robot: ")
-        checkout_name = input("Enter the name of the student (optional): ")
+        #checkout_name = input("Enter the name of the student (optional): ")
         timeout = datetime.datetime.now().time() #time of checkout
         timeout = timeout.strftime("%I:%M %p") #converts time to 12 hour clock instead of 24. I => 12, M => Minute, p => AM/PM
 
-        ipad_file.write (f"{ipad_id},T,{timeout},,{checkout_name}\n")
-        robot_file.write(f"{robot_id},T, {timeout},,{checkout_name}\n")
+        ipad_file.write (f"{ipad_id},T,{timeout},\n")
+        robot_file.write(f"{robot_id},T, {timeout},\n")
 
         checked_out += 1
 
@@ -63,20 +63,20 @@ def checkout(ipad_file, robot_file):
 def viewCheckout (ipad_file, robot_file):
     
     print("\n\nCurrent iPads checked out:")
-    print("\niPad ID,    Time Checked Out,     Student Name")
+    print("\niPad ID,    Time Checked Out")
     reader = csv.DictReader(ipad_file)
     for row in reader:
         if row[" Checked Out"] == 'T':
-            print(row["iPad ID"] + ",        " + row[" Time Out"] + ",                " + row[" Student Name"])
+            print(row["iPad ID"] + ",        " + row[" Time Out"])
 
 
 
     print("\n\nCurrent Robots checked out:")
-    print("\nRobot name,    Time Checked Out,   Student Name")
+    print("\nRobot name,    Time Checked Out")
     reader = csv.DictReader(robot_file)
     for row in reader:
         if row[" Checked Out"] == 'T':
-            print(row["Robot Name"] + ",        " + row[" Time Out"] + ",              " + row[" Student Name"])
+            print(row["Robot Name"] + ",        " + row[" Time Out"])
     
 
 
