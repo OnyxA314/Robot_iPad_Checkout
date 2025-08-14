@@ -1,26 +1,28 @@
 import datetime
 import csv #for checking what robots and iPads are checked out currently
 
-CHECKOUT = 1
-CHECKIN = 2
-VIEW_CHECKEDOUT = 3
-VIEW_ALL = 4
-QUIT = 5
+CHECKOUT = '1'
+CHECKIN = '2'
+VIEW_CHECKEDOUT = '3'
+VIEW_ALL = '4'
+QUIT = '5'
 
 
 def menu():
+
     print("Press" ,CHECKOUT, "to check out an iPad and Robot")
     print("Press", CHECKIN, "to check in an iPad and Robot")
     print("Press", VIEW_CHECKEDOUT, "to view all currently checked out items")
     print("Press", VIEW_ALL, "to view all iPads and Robots used at this event")
     print("Press", QUIT, "to exit the program")
-    choice = int(input())
+    choice = input()
     return choice
 
 
 
 #deletes any previes iPad data and resets it to a default state
 def default_ipad():
+
     ipad_file = open("ipad.csv", 'w')
     ipad_file.write("iPad ID, Checked Out, Time Out, Time In, Student Name\n")
     ipad_file.close()
@@ -29,6 +31,7 @@ def default_ipad():
 
 #deletes any previous robot data and resets it to a default state
 def default_robot():
+
     robot_file = open("robots.csv", 'w')
     robot_file.write("Robot Name, Checked Out, Time Out, Time In, Student Name\n")
     robot_file.close()
@@ -78,7 +81,7 @@ def viewCheckout (ipad_file, robot_file):
 
 
 def checkin():
-    
+
     checkin_amount = int(input("How many sets do you want to check in: "))
     checkedin = 0
 
@@ -169,14 +172,12 @@ def checkin():
     
 
 def viewAll (ipad_file, robot_file):
-    
-    print("\nAll iPads used: ")
 
+    print("\nAll iPads used: ")
     for ipad_lines in ipad_file:
         print(ipad_lines)
 
     print("\nAll Robots used: ")
-    
     for robot_lines in robot_file:
         print(robot_lines)
 
@@ -208,8 +209,9 @@ if (reset == 'y'): #defaults to false, have to explicitly type in Y or y to avoi
 
 print("\n\n")
 
+
 #loop to decide
-choice = 100 #arbitrary value not 4 to initially enter loop, after we enter don't care about this value anymore
+choice = 100 #arbitrary value not 5/QUIT to initially enter loop, after we enter don't care about this value anymore
 while (choice != QUIT):
     choice = menu()
     
@@ -249,15 +251,11 @@ while (choice != QUIT):
         robot_file.close()
 
 
-
-
     elif (choice == QUIT):
         print("Exiting the program...")
 
     else:
         print("Please choose a valid option")
-
-
 
   
     print("\n")
