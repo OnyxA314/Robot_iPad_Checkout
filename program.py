@@ -63,20 +63,20 @@ def checkout(ipad_file, robot_file):
 def viewCheckout (ipad_file, robot_file):
     
     print("\n\nCurrent iPads checked out:")
-    print("\niPad ID,    Time Checked Out")
+    print("\niPad ID     Time Checked Out")
     reader = csv.DictReader(ipad_file)
     for row in reader:
         if row[" Checked Out"] == 'T':
-            print(row["iPad ID"] + ",        " + row[" Time Out"])
+            print(row["iPad ID"] + "         " + row[" Time Out"])
 
 
 
     print("\n\nCurrent Robots checked out:")
-    print("\nRobot name,    Time Checked Out")
+    print("\nRobot name     Time Checked Out")
     reader = csv.DictReader(robot_file)
     for row in reader:
         if row[" Checked Out"] == 'T':
-            print(row["Robot Name"] + ",        " + row[" Time Out"])
+            print(row["Robot Name"] + "         " + row[" Time Out"])
     
 
 
