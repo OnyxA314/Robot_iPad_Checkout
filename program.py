@@ -48,8 +48,8 @@ def checkout(ipad_file, robot_file):
         
         print("\n")
 
-        ipad_id = input("Enter the ipad ID: ")
-        robot_id = input("Enter the name of the robot: ")
+        ipad_id = input("Scan the iPad checking out: ")
+        robot_id = input("Scan the robot checking out: ")
         #checkout_name = input("Enter the name of the student (optional): ")
         timeout = datetime.datetime.now().time() #time of checkout
         timeout = timeout.strftime("%I:%M %p") #converts time to 12 hour clock instead of 24. I => 12, M => Minute, p => AM/PM
@@ -92,8 +92,8 @@ def checkin():
         rows = [] #empty list, going to contain every row to write back to the file
         ipad_found = False #assume the ipad isn't valid first
 
-        ipad_checkin = input("What iPad are you checking in: ")
-        robot_checkin = input("What robot are you checking in: ")
+        ipad_checkin = input("Scan the iPad you are checking in: ")
+        robot_checkin = input("Scan the robot you are checking in: ")
 
         reader = csv.DictReader(ipad_file)
         for row in reader:
