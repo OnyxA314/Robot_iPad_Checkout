@@ -169,6 +169,11 @@ def checkin():
         print("\n\n")
         checkedin += 1
 
+
+        #hacky way of doing this. closes all files at end of each while loop to ensure it can be reopened as 'read' if gonig back to the loop, or just closes @ end of program 
+        robot_file.close()
+        ipad_file.close()
+
     
 
 def viewAll (ipad_file, robot_file):
