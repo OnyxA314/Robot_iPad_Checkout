@@ -14,7 +14,7 @@ def menu():
     print("Press", CHECKIN, "to check in an iPad and Robot")
     print("Press", VIEW_CHECKEDOUT, "to view all currently checked out items")
     print("Press", VIEW_ALL, "to view all iPads and Robots used at this event")
-    print("Press", QUIT, "to exit the program")
+    print("Press", QUIT, " or 'q' to exit the program")
     choice = input("Your Choice: ")
     return choice
 
@@ -24,7 +24,7 @@ def menu():
 def default_ipad():
 
     ipad_file = open("ipad.csv", 'w')
-    ipad_file.write("iPad ID, Checked Out, Time Out, Time In\n")
+    ipad_file.write("iPad ID, Checked Out, Time Out, Time In, Student Name\n")
     ipad_file.close()
     return
 
@@ -33,13 +33,12 @@ def default_ipad():
 def default_robot():
 
     robot_file = open("robots.csv", 'w')
-    robot_file.write("Robot Name, Checked Out, Time Out, Time In\n")
+    robot_file.write("Robot Name, Checked Out, Time Out, Time In, Student Name\n")
     robot_file.close()
     return
 
 
-
-def checkout(ipad_file, robot_file):
+def checkout(ipad_file, robot_file, name_usage):
 
     checkout_amount = int(input("How many students are checking out a robot and iPad: "))
     checked_out = 0
@@ -50,33 +49,76 @@ def checkout(ipad_file, robot_file):
 
         ipad_id = input("Scan the iPad checking out: ")
         robot_id = input("Scan the robot checking out: ")
-        #checkout_name = input("Enter the name of the student (optional): ")
         timeout = datetime.datetime.now().time() #time of checkout
         timeout = timeout.strftime("%I:%M %p") #converts time to 12 hour clock instead of 24. I => 12, M => Minute, p => AM/PM
 
-        ipad_file.write (f"{ipad_id},T,{timeout},\n")
-        robot_file.write(f"{robot_id},T, {timeout},\n")
+
+        if (name_usage):
+            checkout_name = input("Enter the name of the student: ")
+            #NOTE: we write a blank space between timeout and checkout to prevent writting to the 'timeout' slot with the student name
+            ipad_file.write (f"{ipad_id},T,{timeout}, ,{checkout_name}\n")
+            robot_file.write(f"{robot_id},T, {timeout}, ,{checkout_name}\n")
+
+
+        #NOTE: below we have two empty sections writting to the files, one for timeout and one for the name slot even though it's not being used
+        #this is because a rare situation where start program no name, close, open program with name not reset list, then view checkout
+        else:
+            ipad_file.write (f"{ipad_id},T,{timeout}, , ,\n")
+            robot_file.write(f"{robot_id},T,{timeout}, , ,\n")
+
+
 
         checked_out += 1
 
+    return
 
-def viewCheckout (ipad_file, robot_file):
+
+
+#TODO: MAKE THE FORMATTING BETTER WHEN PRINTING BY USING ACTUAL FORMAT COMMANDS INSTEAD OF JUST HARD CODED SPACES
+def viewCheckout (ipad_file, robot_file, name_usage):
     
-    print("\n\nCurrent iPads checked out:")
-    print("\niPad ID     Time Checked Out")
-    reader = csv.DictReader(ipad_file)
-    for row in reader:
-        if row[" Checked Out"] == 'T':
-            print(row["iPad ID"] + "         " + row[" Time Out"])
+
+    
+    if (name_usage):
+        print("\n\nCurrent iPads checked out:")
+        print("\niPad ID     Time Checked Out     Name of Student")
+        reader = csv.DictReader(ipad_file)
+        for row in reader:
+            if row[" Checked Out"] == 'T':
+                print(row["iPad ID"] + "         " + row[" Time Out"]+ "         " + row[ " Student Name"])
 
 
 
-    print("\n\nCurrent Robots checked out:")
-    print("\nRobot name     Time Checked Out")
-    reader = csv.DictReader(robot_file)
-    for row in reader:
-        if row[" Checked Out"] == 'T':
-            print(row["Robot Name"] + "         " + row[" Time Out"])
+        print("\n\nCurrent Robots checked out:")
+        print("\nRobot name     Time Checked Out     Name of Student")
+        reader = csv.DictReader(robot_file)
+        for row in reader:
+            if row[" Checked Out"] == 'T':
+                print(row["Robot Name"] + "         " + row[" Time Out"]+ "         " + row[" Student Name"])
+
+
+
+
+
+    
+    else: 
+        print("\n\nCurrent iPads checked out:")
+        print("\niPad ID     Time Checked Out")
+        reader = csv.DictReader(ipad_file)
+        for row in reader:
+            if row[" Checked Out"] == 'T':
+                print(row["iPad ID"] + "         " + row[" Time Out"])
+
+
+
+        print("\n\nCurrent Robots checked out:")
+        print("\nRobot name     Time Checked Out")
+        reader = csv.DictReader(robot_file)
+        for row in reader:
+            if row[" Checked Out"] == 'T':
+                print(row["Robot Name"] + "         " + row[" Time Out"])
+
+    return
     
 
 
@@ -174,8 +216,12 @@ def checkin():
         robot_file.close()
         ipad_file.close()
 
+    return
+
     
 
+
+#TODO: Make formatting a lot better in this so it's actually follows columns
 def viewAll (ipad_file, robot_file):
 
     print("\nAll iPads used: ")
@@ -185,6 +231,25 @@ def viewAll (ipad_file, robot_file):
     print("\nAll Robots used: ")
     for robot_lines in robot_file:
         print(robot_lines)
+
+    return
+
+
+
+#deciding if operator wants ot enter student names or not.
+name_usage = False; #assumes operator doesn't want to record students name by default
+name_decision = input("Do you want to record student names (y/N): ").lower()
+if (name_decision == 'y'): #have to explicitly state they want names, otherwise assumes no 
+    name_usage = True
+
+
+#deciding to reset or not
+reset = input("Do you want to reset (y/N): ").lower() 
+if (reset == 'y'): #defaults to false, have to explicitly type in Y or y to avoid any potential accidential deletions
+    print("Reseting lists...")
+
+    default_ipad()
+    default_robot()
 
 
 
@@ -203,28 +268,19 @@ except:
     default_robot()
 
 
-#deciding to reset or not
-reset = input("Do you want to reset (y/N): ").lower() 
-if (reset == 'y'): #defaults to false, have to explicitly type in Y or y to avoid any potential accidential deletions
-    print("Reseting lists...")
-
-    default_ipad()
-    default_robot()
-
-
 print("\n\n")
 
 
 #loop to decide
 choice = 100 #arbitrary value not 5/QUIT to initially enter loop, after we enter don't care about this value anymore
-while (choice != QUIT):
+while (choice != QUIT and choice != 'q'): #added 'q' as I found myself instictevly pressing 'q' to exit
     choice = menu()
     
     if (choice == CHECKOUT):
         ipad_file = open("ipad.csv", 'a')
         robot_file = open("robots.csv", 'a')
 
-        checkout(ipad_file, robot_file)
+        checkout(ipad_file, robot_file, name_usage)
 
         ipad_file.close()
         robot_file.close()
@@ -240,7 +296,7 @@ while (choice != QUIT):
         ipad_file = open("ipad.csv", 'r')
         robot_file = open("robots.csv", 'r')
 
-        viewCheckout(ipad_file, robot_file)  
+        viewCheckout(ipad_file, robot_file, name_usage)  
 
         ipad_file.close()
         robot_file.close()
@@ -256,7 +312,7 @@ while (choice != QUIT):
         robot_file.close()
 
 
-    elif (choice == QUIT):
+    elif (choice == QUIT or choice == 'q'): #'q' added as I found myself instinctevly pressing 'q' to exit
         print("Exiting the program...")
 
     else:
