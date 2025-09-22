@@ -47,6 +47,10 @@ def checkout(ipad_file, robot_file, name_usage):
         
         print("\n")
 
+        #this is shitty code, I should combine both name usages inside a single if statement, might fix later idk1
+        if (name_usage):
+            checkout_name = input("Enter the name of the student: ")
+
         ipad_id = input("Scan the iPad checking out: ")
         robot_id = input("Scan the robot checking out: ")
         timeout = datetime.datetime.now().time() #time of checkout
@@ -54,7 +58,7 @@ def checkout(ipad_file, robot_file, name_usage):
 
 
         if (name_usage):
-            checkout_name = input("Enter the name of the student: ")
+            #checkout_name = input("Enter the name of the student: ")
             #NOTE: we write a blank space between timeout and checkout to prevent writting to the 'timeout' slot with the student name
             ipad_file.write (f"{ipad_id},T,{timeout}, ,{checkout_name}\n")
             robot_file.write(f"{robot_id},T, {timeout}, ,{checkout_name}\n")
@@ -76,9 +80,7 @@ def checkout(ipad_file, robot_file, name_usage):
 
 #TODO: MAKE THE FORMATTING BETTER WHEN PRINTING BY USING ACTUAL FORMAT COMMANDS INSTEAD OF JUST HARD CODED SPACES
 def viewCheckout (ipad_file, robot_file, name_usage):
-    
-
-    
+     
     if (name_usage):
         print("\n\nCurrent iPads checked out:")
         print("\niPad ID     Time Checked Out     Name of Student")
@@ -95,10 +97,6 @@ def viewCheckout (ipad_file, robot_file, name_usage):
         for row in reader:
             if row[" Checked Out"] == 'T':
                 print(row["Robot Name"] + "         " + row[" Time Out"]+ "         " + row[" Student Name"])
-
-
-
-
 
     
     else: 
@@ -167,8 +165,6 @@ def checkin():
             writer.writerows(rows)
         else:
             print("No iPad with that ID was checked out...")
-
-
 
 
 
@@ -247,11 +243,8 @@ if (name_decision == 'y'): #have to explicitly state they want names, otherwise 
 reset = input("Do you want to reset (y/N): ").lower() 
 if (reset == 'y'): #defaults to false, have to explicitly type in Y or y to avoid any potential accidential deletions
     print("Reseting lists...")
-
     default_ipad()
     default_robot()
-
-
 
 
 #tries top open up the required files, if not create them
@@ -271,7 +264,7 @@ except:
 print("\n\n")
 
 
-#loop to decide
+#loop to decide what to do
 choice = 100 #arbitrary value not 5/QUIT to initially enter loop, after we enter don't care about this value anymore
 while (choice != QUIT and choice != 'q'): #added 'q' as I found myself instictevly pressing 'q' to exit
     choice = menu()
